@@ -1,0 +1,8 @@
+# Cli binary
+fpc
+
+# C build folder
+/build/
+
+# TODOs
+/TODO
