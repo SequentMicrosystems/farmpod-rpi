@@ -163,7 +163,7 @@ int doValveOpeningRead(int argc, char *argv[]) {
 
 const CliCmdType CMD_VALVE_OPEN_WRITE = {
 	"vopwr",
-        2,
+        1,
         &doValveOpenWrite,
         "  vopwr            Open valve.\n",
         "  Usage 1:         "PROGRAM_NAME" vopwr <channel[1.."STR(VALVE_CH_NO)"]>\n",
@@ -193,7 +193,7 @@ int doValveOpenWrite(int argc, char *argv[]) {
 
 const CliCmdType CMD_VALVE_CLOSE_WRITE = {
 	"vclwr",
-        2,
+        1,
         &doValveCloseWrite,
         "  vclwr            Close valve.\n",
         "  Usage 1:         "PROGRAM_NAME" vclwr <channel[1.."STR(VALVE_CH_NO)"]>\n",

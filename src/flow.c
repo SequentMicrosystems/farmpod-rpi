@@ -7,96 +7,120 @@
 #include "flow.h"
 
 const CliCmdType CMD_FLOW_CNT_READ = {
-	"fcntrd",
-	2,
+	"cntrd",
+	1,
 	&doFlowCntRead,
-	"  fcntrd           Get accumultaion counter.\n",
-	"  Usage:           "PROGRAM_NAME" fcntrd <channel[1.."STR(FLOW_CH_NO)"]>\n",
-	"  Example:         "PROGRAM_NAME" fcntrd 2; Get accumulation counter for channel #2\n"
+	"  cntrd            Get flow counter accumulation\n",
+	"  Usage:           "PROGRAM_NAME" cntrd <channel[1.."STR(FLOW_CH_NO)"]>\n",
+	"  Example:         "PROGRAM_NAME" cntrd 2  Get flow counter #2 \n"
 };
-int doFlowCntRead(int argc, char *argv[]) {
-	if(argc != 3) {
+
+int doFlowCntRead(int argc, char *argv[])
+{
+	if (argc != 3)
+	{
 		return ARG_CNT_ERR;
 	}
 	int dev = doBoardInit(0);
-	if (dev < 0) {
-		return ERROR;
+	if (dev < 0)
+	{
+		return ERROR ;
 	}
 	int ch = atoi(argv[2]);
-	if(!(1 <= ch && ch <= FLOW_CH_NO)) {
-		printf("Flow channel number out of range!");
-		return ARG_RANGE_ERR;
+	if (! (1 <= ch && ch <= FLOW_CH_NO))
+	{
+		printf("Current channel out of range!\n");
+		return ARG_RANGE_ERROR;
 	}
 	uint8_t buf[COUNTER_SIZE];
-	if (OK != i2cMem8Read(dev, I2C_MEM_FLOW_COUNTER1 + (ch - 1) * COUNTER_SIZE, buf, COUNTER_SIZE))
+	if (OK
+		!= i2cMem8Read(dev, I2C_MEM_FLOW_COUNTER1 + (ch - 1) * COUNTER_SIZE, buf,
+			UI_VAL_SIZE))
 	{
-		printf("Fail to read watchdog reset count!\n");
-		return ERROR;
+		printf("Fail to read counter!\n");
+		return ERROR ;
 	}
-	uint32_t cnt;
-	memcpy(&cnt, buf, COUNTER_SIZE);
-	printf("%d\n", (int)cnt);
-	return OK;
-}
-
-const CliCmdType CMD_FLOW_FREQ_READ = {
-	"ffeqrd",
-	2,
-	&doFlowFreqRead,
-	"  ffeqrd           Get frequency(Hz).\n",
-	"  Usage:           "PROGRAM_NAME" ffeqrd <channel[1.."STR(FLOW_CH_NO)"]>\n",
-	"  Example:         "PROGRAM_NAME" ffeqrd 2; Get frequency for channel #2\n"
-};
-int doFlowFreqRead(int argc, char *argv[]) {
-	if(argc != 3) {
-		return ARG_CNT_ERR;
-	}
-	int dev = doBoardInit(0);
-	if (dev < 0) {
-		return ERROR;
-	}
-	int ch = atoi(argv[2]);
-	if(!(1 <= ch && ch <= FLOW_CH_NO)) {
-		printf("Flow channel number out of range!");
-		return ARG_RANGE_ERR;
-	}
-	uint8_t buf[FREQUENCY_SIZE];
-	if (OK != i2cMem8Read(dev, I2C_MEM_FLOW_COUNTER1 + (ch - 1) * FREQUENCY_SIZE, buf, FREQUENCY_SIZE))
-	{
-		printf("Fail to read watchdog reset count!\n");
-		return ERROR;
-	}
-	uint16_t freq;
-	memcpy(&freq, buf, FREQUENCY_SIZE);
-	printf("%d\n", (int)freq);
-	return OK;
+	uint32_t count;
+	memcpy(&count, buf, COUNTER_SIZE);
+	printf("%d\n", (int)count);
+	return OK ;
 }
 
 const CliCmdType CMD_FLOW_CNT_RESET = {
-	"fcntrst",
-	2,
+	"cntrst",
+	1,
 	&doFlowCntReset,
-	"  fcntrst          Reset flow meter accumulation counter\n",
-	"  Usage:           "PROGRAM_NAME" fcntrst <channel[1.."STR(FLOW_CH_NO)"\n",
-	"  Example:         "PROGRAM_NAME" fcntrst 2  Reset flow meter accumulation counter for channel #2\n"
+	"  cntrst            Reset flow counter accumulation\n",
+	"  Usage:           "PROGRAM_NAME" cntrst <channel[1.."STR(FLOW_CH_NO)"]>\n",
+	"  Example:         "PROGRAM_NAME" cntrst 2  Reset flow counter #2 \n"
 };
-int doFlowCntReset(int argc, char *argv[]) {
-	if(argc != 3) {
+
+int doFlowCntReset(int argc, char *argv[])
+{
+	if (argc != 3)
+	{
 		return ARG_CNT_ERR;
 	}
 	int dev = doBoardInit(0);
-	if (dev <= 0) {
-		return ERROR;
+	if (dev < 0)
+	{
+		return ERROR ;
 	}
 	int ch = atoi(argv[2]);
-	if(!(1 <= ch && ch <= FLOW_CH_NO)) {
-		printf("Flow channel number out of range\n");
-		return ARG_RANGE_ERR;
+	if (! (1 <= ch && ch <= FLOW_CH_NO))
+	{
+		printf("Current channel out of range!\n");
+		return ARG_RANGE_ERROR;
 	}
-	uint8_t buf[1] = { ch };
-	if (OK != i2cMem8Write(dev, I2C_MEM_FLOW_COUNT_RESET_CMD, buf, 1)) {
-		printf("Fail to reset flow meter accumulation counter!\n");
-		return ERROR;
+	uint8_t buf[UI_VAL_SIZE];
+	buf[0] = (uint8_t)ch;
+	if (OK != i2cMem8Write(dev, I2C_MEM_FLOW_COUNT_RESET_CMD, buf,1))
+	{
+		printf("Fail to read counter!\n");
+		return ERROR ;
 	}
-	return OK;
+	uint32_t count;
+	memcpy(&count, buf, COUNTER_SIZE);
+	printf("%d\n", (int)count);
+	return OK ;
+}
+
+const CliCmdType CMD_FLOW_FREQ_READ = {
+	"flowrd",
+	1,
+	&doFlowFreqRead,
+	"  flowrd            Get flow frequency in Hz\n",
+	"  Usage:           "PROGRAM_NAME" flowrd <channel[1.."STR(FLOW_CH_NO)"]>\n",
+	"  Example:         "PROGRAM_NAME" flowrd 2  Get flow frequency on channel #2 \n"
+};
+
+int doFlowFreqRead(int argc, char *argv[])
+{
+	if (argc != 3)
+	{
+		return ARG_CNT_ERR;
+	}
+	int dev = doBoardInit(0);
+	if (dev < 0)
+	{
+		return ERROR ;
+	}
+	int ch = atoi(argv[2]);
+	if (! (1 <= ch && ch <= FLOW_CH_NO))
+	{
+		printf("Current channel out of range!\n");
+		return ARG_RANGE_ERROR;
+	}
+	uint8_t buf[COUNTER_SIZE];
+	if (OK
+		!= i2cMem8Read(dev, I2C_MEM_FLOW_FREQ1 + (ch - 1) * UI_VAL_SIZE, buf,
+			UI_VAL_SIZE))
+	{
+		printf("Fail to read frequency!\n");
+		return ERROR ;
+	}
+	uint16_t count;
+	memcpy(&count, buf, UI_VAL_SIZE);
+	printf("%d\n", (int)count);
+	return OK ;
 }

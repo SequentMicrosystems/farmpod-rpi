@@ -8,7 +8,7 @@
 
 const CliCmdType CMD_BOARD = {
         "board",
-        2,
+        1,
         &doBoard,
         "  board            Display the board status and firmware version number\n",
         "  Usage:           "PROGRAM_NAME" <stack> board\n",
@@ -16,10 +16,11 @@ const CliCmdType CMD_BOARD = {
 
 };
 int doBoard(int argc, char *argv[]) {
-        if(argc != 3) {
+        (void)argv;
+        if(argc != 2) {
                 return ARG_CNT_ERR;
         }
-        int dev = doBoardInit(atoi(argv[1]));
+        int dev = doBoardInit(0);
         if(dev <= 0) {
                 return ERROR;
         }
