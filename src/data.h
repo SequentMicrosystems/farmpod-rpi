@@ -2,8 +2,8 @@
 #define DATA_H
 
 #define CARD_NAME "Farmpod Controller"
-#define PROGRAM_NAME "fpc"
-#define VERSION "1.0.2"
+#define PROGRAM_NAME "frpc"
+#define VERSION "1.0.3"
 #define SLAVE_OWN_ADDRESS_BASE 0x50
 
 #define MIN_CH_NO 1

@@ -562,7 +562,7 @@ const CliCmdType CMD_RELAY_READ =
 	&doRelayRead,
 	"  relrd            Read one of 22 relay state\n",
 	"  Usage :         "PROGRAM_NAME" relrd <channel[1.."STR(RELAY_CH_NO)"]>\n"
-	"  ",
+	"",
 	"  Example:         "PROGRAM_NAME" relrd 2  Get the state of relay #2\n"
 };
 int doRelayRead(int argc, char *argv[])
@@ -642,8 +642,8 @@ const CliCmdType CMD_RELAY_WRITE =
 	1,
 	&doRelayWrite,
 	"  relwr            Change relay state\n",
-	"  Usage :         "PROGRAM_NAME" relwr <channel[1.."STR(RELAY_FAN_CH_NO)"]> <state(0/1)>\n"
-	" ",
+	"  Usage :         "PROGRAM_NAME" relwr <channel[1.."STR(RELAY_CH_NO)"]> <state(0/1)>\n"
+	"",
 	"  Example:         "PROGRAM_NAME" relwr 2 1  Set the state of relay #2 to ON\n"
 };
 int doRelayWrite(int argc, char *argv[])
