@@ -15,6 +15,10 @@ extern const CliCmdType CMD_RELAY_PUMP_READ;
 extern const CliCmdType CMD_RELAY_SPARE_WRITE;
 extern const CliCmdType CMD_RELAY_SPARE_READ;
 
+extern const CliCmdType CMD_RELAY_READ;
+extern const CliCmdType CMD_RELAY_WRITE;
+
+
 int doRelayFanRead(int argc, char *argv[]);
 int doRelayFanWrite(int argc, char *argv[]);
 
@@ -26,4 +30,7 @@ int doRelayPumpWrite(int argc, char *argv[]);
 
 int doRelaySpareRead(int argc, char *argv[]);
 int doRelaySpareWrite(int argc, char *argv[]);
+
+int doRelayRead(int argc, char *argv[]);
+int doRelayWrite(int argc, char *argv[]);
 #endif /* RELAY_H */

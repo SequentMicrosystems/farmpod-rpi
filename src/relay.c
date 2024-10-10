@@ -5,7 +5,8 @@
 #include "data.h"
 #include "relay.h"
 
-const CliCmdType CMD_RELAY_FAN_READ = {
+const CliCmdType CMD_RELAY_FAN_READ =
+{
 	"fanrd",
 	1,
 	&doRelayFanRead,
@@ -72,7 +73,8 @@ int doRelayFanRead(int argc, char *argv[])
 	return OK ;
 }
 
-const CliCmdType CMD_RELAY_FAN_WRITE = {
+const CliCmdType CMD_RELAY_FAN_WRITE =
+{
 	"fanwr",
 	1,
 	&doRelayFanWrite,
@@ -140,7 +142,8 @@ int doRelayFanWrite(int argc, char *argv[])
 	return OK ;
 }
 
-const CliCmdType CMD_RELAY_LIGHT_READ = {
+const CliCmdType CMD_RELAY_LIGHT_READ =
+{
 	"litrd",
 	1,
 	&doRelayLightRead,
@@ -207,7 +210,8 @@ int doRelayLightRead(int argc, char *argv[])
 	return OK ;
 }
 
-const CliCmdType CMD_RELAY_LIGHT_WRITE = {
+const CliCmdType CMD_RELAY_LIGHT_WRITE =
+{
 	"litwr",
 	1,
 	&doRelayLightWrite,
@@ -275,7 +279,8 @@ int doRelayLightWrite(int argc, char *argv[])
 	return OK ;
 }
 
-const CliCmdType CMD_RELAY_PUMP_READ = {
+const CliCmdType CMD_RELAY_PUMP_READ =
+{
 	"pumprd",
 	1,
 	&doRelayPumpRead,
@@ -284,50 +289,66 @@ const CliCmdType CMD_RELAY_PUMP_READ = {
 	"  Usage 2:         "PROGRAM_NAME" pumprd\n",
 	"  Example:         "PROGRAM_NAME" pumprd 2  Get the state of relay pump #2\n"
 };
-int doRelayPumpRead(int argc, char *argv[]) {
-        if(!(argc == 2 || argc == 3)) {
-                return ARG_CNT_ERR;
-        }
-        int dev = doBoardInit(0);
-        if(dev < 0) {
-                return ERROR;
-        }
-        if(argc == 2) {
+int doRelayPumpRead(int argc, char *argv[])
+{
+	if (! (argc == 2 || argc == 3))
+	{
+		return ARG_CNT_ERR;
+	}
+	int dev = doBoardInit(0);
+	if (dev < 0)
+	{
+		return ERROR ;
+	}
+	if (argc == 2)
+	{
 		uint8_t buf[1];
-                if(OK != i2cMem8Read(dev, I2C_MEM_RELAY_PUMP_VAL, buf, 1)) {
-                        printf("Fail to read!\n");
-                        return ERROR;
-                }
-		for(int rel = 1; rel <= RELAY_PUMP_CH_NO; ++rel) {
-			if(buf[0] & (1 << (rel - 1))) {
+		if (OK != i2cMem8Read(dev, I2C_MEM_RELAY_PUMP_VAL, buf, 1))
+		{
+			printf("Fail to read!\n");
+			return ERROR ;
+		}
+		for (int rel = 1; rel <= RELAY_PUMP_CH_NO; ++rel)
+		{
+			if (buf[0] & (1 << (rel - 1)))
+			{
 				printf("1 ");
-			} else {
+			}
+			else
+			{
 				printf("0 ");
 			}
 		}
 		printf("\n");
-        }
-        else if(argc == 3) {
+	}
+	else if (argc == 3)
+	{
 		uint8_t buf[1];
-		if(OK != i2cMem8Read(dev, I2C_MEM_RELAY_PUMP_VAL, buf, 1)) {
+		if (OK != i2cMem8Read(dev, I2C_MEM_RELAY_PUMP_VAL, buf, 1))
+		{
 			printf("Fail to read!\n");
-			return ERROR;
+			return ERROR ;
 		}
 		int rel = atoi(argv[2]);
-                if(!(1 <= rel && rel <= RELAY_PUMP_CH_NO)) {
+		if (! (1 <= rel && rel <= RELAY_PUMP_CH_NO))
+		{
 			printf("Led number out of range");
-                        return ARG_RANGE_ERROR;
-                }
-		if(buf[0] & (1 << (rel - 1))) {
+			return ARG_RANGE_ERROR;
+		}
+		if (buf[0] & (1 << (rel - 1)))
+		{
 			printf("1\n"); /* rel ON */
-		} else {
+		}
+		else
+		{
 			printf("0\n");
 		}
-        }
-        return OK;
+	}
+	return OK ;
 }
 
-const CliCmdType CMD_RELAY_PUMP_WRITE = {
+const CliCmdType CMD_RELAY_PUMP_WRITE =
+{
 	"pumpwr",
 	1,
 	&doRelayPumpWrite,
@@ -395,7 +416,8 @@ int doRelayPumpWrite(int argc, char *argv[])
 	return OK ;
 }
 
-const CliCmdType CMD_RELAY_SPARE_READ = {
+const CliCmdType CMD_RELAY_SPARE_READ =
+{
 	"sprd",
 	1,
 	&doRelaySpareRead,
@@ -462,7 +484,8 @@ int doRelaySpareRead(int argc, char *argv[])
 	return OK ;
 }
 
-const CliCmdType CMD_RELAY_SPARE_WRITE = {
+const CliCmdType CMD_RELAY_SPARE_WRITE =
+{
 	"spwr",
 	1,
 	&doRelaySpareWrite,
@@ -527,5 +550,163 @@ int doRelaySpareWrite(int argc, char *argv[])
 			}
 		}
 	}
+	return OK ;
+}
+
+// All relays --------------------------------------------------
+
+const CliCmdType CMD_RELAY_READ =
+{
+	"relrd",
+	1,
+	&doRelayRead,
+	"  relrd            Read one of 22 relay state\n",
+	"  Usage :         "PROGRAM_NAME" relrd <channel[1.."STR(RELAY_CH_NO)"]>\n"
+	"  ",
+	"  Example:         "PROGRAM_NAME" relrd 2  Get the state of relay #2\n"
+};
+int doRelayRead(int argc, char *argv[])
+{
+	if (! (argc == 3))
+	{
+		return ARG_CNT_ERR;
+	}
+	int dev = doBoardInit(0);
+	if (dev < 0)
+	{
+		return ERROR ;
+	}
+
+	int relay = atoi(argv[2]);
+	if (! (1 <= relay && relay <= RELAY_CH_NO))
+	{
+		printf("Relay number out of range");
+		return ARG_RANGE_ERROR;
+	}
+	uint8_t buf[1];
+	uint8_t shift = 0;
+	if (relay <= RELAY_FAN_CH_NO)
+	{
+		if (OK != i2cMem8Read(dev, I2C_MEM_RELAY_FAN_VAL, buf, 1))
+		{
+			printf("Fail to read!\n");
+			return ERROR ;
+		}
+		shift = relay - 1;
+	}
+	else if (relay <= RELAY_FAN_CH_NO + RELAY_LIGHT_CH_NO)
+	{
+		if (OK != i2cMem8Read(dev, I2C_MEM_RELAY_LIGHT_VAL, buf, 1))
+		{
+			printf("Fail to read!\n");
+			return ERROR ;
+		}
+		shift = relay - RELAY_FAN_CH_NO - 1;
+
+	}
+	else if (relay <= RELAY_FAN_CH_NO + RELAY_LIGHT_CH_NO + RELAY_PUMP_CH_NO)
+	{
+		if (OK != i2cMem8Read(dev, I2C_MEM_RELAY_PUMP_VAL, buf, 1))
+		{
+			printf("Fail to read!\n");
+			return ERROR ;
+		}
+		shift = relay - RELAY_FAN_CH_NO - RELAY_LIGHT_CH_NO - 1;
+	}
+	else
+	{
+		if (OK != i2cMem8Read(dev, I2C_MEM_RELAY_SPARE_VAL, buf, 1))
+		{
+			printf("Fail to read!\n");
+			return ERROR ;
+		}
+		shift = relay - RELAY_FAN_CH_NO - RELAY_LIGHT_CH_NO - RELAY_PUMP_CH_NO
+			- 1;
+	}
+
+	if (buf[0] & (1 << shift))
+	{
+		printf("1\n"); /* relay ON */
+	}
+	else
+	{
+		printf("0\n");
+	}
+
+	return OK ;
+}
+
+const CliCmdType CMD_RELAY_WRITE =
+{
+	"relwr",
+	1,
+	&doRelayWrite,
+	"  relwr            Change relay state\n",
+	"  Usage :         "PROGRAM_NAME" relwr <channel[1.."STR(RELAY_FAN_CH_NO)"]> <state(0/1)>\n"
+	" ",
+	"  Example:         "PROGRAM_NAME" relwr 2 1  Set the state of relay #2 to ON\n"
+};
+int doRelayWrite(int argc, char *argv[])
+{
+	if (! (argc == 4))
+	{
+		return ARG_CNT_ERR;
+	}
+	int dev = doBoardInit(0);
+	if (dev < 0)
+	{
+		return ERROR ;
+	}
+
+	int state = 0;
+	int relay = atoi(argv[2]);
+	if (! (1 <= relay && relay <= RELAY_CH_NO))
+	{
+		printf("Relay number out of range");
+		return ARG_RANGE_ERROR;
+	}
+	state = atoi(argv[3]);
+
+	uint8_t add = I2C_MEM_RELAY_FAN_SET;
+	uint8_t count = 0;
+	if(relay <= RELAY_FAN_CH_NO)
+	{
+		count = relay;
+		add = I2C_MEM_RELAY_FAN_SET;
+	}
+	else if(relay <= RELAY_FAN_CH_NO + RELAY_LIGHT_CH_NO)
+	{
+		count = relay - RELAY_FAN_CH_NO;
+		add = I2C_MEM_RELAY_LIGHT_SET;
+	}
+	else if(relay <= RELAY_FAN_CH_NO + RELAY_LIGHT_CH_NO + RELAY_PUMP_CH_NO)
+	{
+		count = relay - RELAY_FAN_CH_NO - RELAY_LIGHT_CH_NO;
+		add = I2C_MEM_RELAY_PUMP_SET;
+	}
+	else
+	{
+		count = relay - RELAY_FAN_CH_NO - RELAY_LIGHT_CH_NO - RELAY_PUMP_CH_NO;
+		add = I2C_MEM_RELAY_SPARE_SET;
+	}
+	uint8_t buf[1];
+	buf[0] = 0xff & count;
+	if (state > 0)
+	{
+		if (OK != i2cMem8Write(dev, add, buf, 1))
+		{
+			printf("Fail to write!\n");
+			return ERROR ;
+		}
+	}
+	else
+	{
+		if (OK != i2cMem8Write(dev, add + 1, buf, 1))
+		{
+			printf("Fail to write!\n");
+			return ERROR ;
+		}
+	}
+
 	return OK ;
 }

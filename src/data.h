@@ -3,7 +3,7 @@
 
 #define CARD_NAME "Farmpod Controller"
 #define PROGRAM_NAME "fpc"
-#define VERSION "1.0.1"
+#define VERSION "1.0.2"
 #define SLAVE_OWN_ADDRESS_BASE 0x50
 
 #define MIN_CH_NO 1
@@ -21,6 +21,7 @@
 #define RELAY_LIGHT_CH_NO 8
 #define RELAY_PUMP_CH_NO 4
 #define RELAY_SPARE_CH_NO 4
+#define RELAY_CH_NO 22
 
 #define OD_FISH_CH_NO 4
 #define OD_PERI_CH_NO 4
